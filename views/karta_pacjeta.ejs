@@ -13,13 +13,15 @@
                 <th>Ratownik</th>
                 <th>Opcje</th>
             </tr>
-            <tr>
-                <td>0001</td>
-                <td>Jan Kowalski</td>
-                <td>01.01.2018</td>
-                <td>Marcin Rytśmigło</td>
-                <td><a href="#">Zobacz</a></td>
-            </tr>
+            <% for(var i=0; i<db.length; i++) { %>
+                <tr>
+                    <td><%=db[i].id%></td>
+                    <td><%=db[i].name%></td>
+                    <td><%=db[i].date%></td>
+                    <td><%=db[i].rat%></td>
+                    <td><a href="/pacjet">Zobacz</a></td>
+                </tr>
+            <% } %>
         </table>
     </body>
 </html>

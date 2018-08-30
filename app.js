@@ -8,7 +8,24 @@ const flash = require('connect-flash');
 const mysql = require('mysql');
 const sync = require('sync-request');
 
+const mysql_c = require('./mysql.json');
+
 const app = express();
+
+// === MYSQL CONNECTION === //
+const sqlcon = mysql.createConnection({
+    host: mysql_c.host, 
+    user: mysql_c.user, 
+    password: mysql_c.password,
+    database: mysql_c.database,
+    supportBigNumbers: true,
+    bigNumberString: true
+})
+
+sqlcon.connect(e => {
+    if(e) throw e;
+    console.log("Połączono prawodłowo z bazą danych.");
+})
 
 // === LOADING PAGE === //
 
@@ -30,7 +47,29 @@ router.get('/', (req, res) => {
 });
 
 router.get('/karta_pacjeta', (req, res) => {
-    res.render('karta_pacjeta');
+    sqlcon.query("SELECT * FROM pacjeci ORDER BY id", (e, result) => {
+        if(e) {
+            res.write("Błąd");
+            res.send();
+            return;
+        }
+        var data = {};
+        data.db = result;
+        res.render('karta_pacjeta', data);
+    });
+});
+
+router.get('/pacjet', (req, res) => {
+    sqlcon.query("SELECT * FROM pacjeci", (e, result) => {
+        if(e) {
+            res.write("Błąd");
+            res.send();
+            return;
+        }
+        var data = {};
+        data.db = result;
+        res.render('pacjet_page', data);
+    });
 });
 
 app.use('/', router);
